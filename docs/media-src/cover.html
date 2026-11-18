@@ -1,0 +1,57 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  @font-face { font-family: Inter; font-weight: 400; src: url(../../frontend/node_modules/@fontsource/inter/files/inter-latin-400-normal.woff2); }
+  @font-face { font-family: Inter; font-weight: 500; src: url(../../frontend/node_modules/@fontsource/inter/files/inter-latin-500-normal.woff2); }
+  @font-face { font-family: Inter; font-weight: 600; src: url(../../frontend/node_modules/@fontsource/inter/files/inter-latin-600-normal.woff2); }
+  @font-face { font-family: Inter; font-weight: 700; src: url(../../frontend/node_modules/@fontsource/inter/files/inter-latin-700-normal.woff2); }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1600px; height: 1200px; overflow: hidden; }
+  body {
+    font-family: Inter, system-ui, sans-serif; color: #E8ECF3; position: relative;
+    background:
+      radial-gradient(900px 520px at 78% -8%, rgba(245,158,11,.22), transparent 60%),
+      radial-gradient(800px 600px at 8% 105%, rgba(59,130,246,.16), transparent 60%),
+      linear-gradient(160deg, #0B1220 0%, #0A1020 45%, #070B14 100%);
+  }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 48px 48px; mask-image: radial-gradient(1100px 620px at 50% 20%, #000 30%, transparent 75%); }
+  header { position: relative; text-align: center; padding-top: 84px; }
+  .brand { display: inline-flex; align-items: center; gap: 14px; padding: 8px 16px 8px 8px; border-radius: 999px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09); font-size: 15px; font-weight: 500; color: #CBD5E1; }
+  .mark { width: 34px; height: 34px; border-radius: 10px; background: #0B1220; border: 1px solid rgba(255,255,255,.12); display: grid; place-items: center; }
+  h1 { margin-top: 30px; font-size: 92px; line-height: 1; font-weight: 700; letter-spacing: -0.045em; color: #fff; }
+  h1 span { background: linear-gradient(90deg, #FBBF24, #F59E0B 60%, #F97316); -webkit-background-clip: text; color: transparent; }
+  .sub { margin-top: 22px; font-size: 27px; font-weight: 500; color: #A8B3C7; letter-spacing: -0.01em; }
+  .badges { margin-top: 34px; display: flex; justify-content: center; gap: 12px; }
+  .badge { display: inline-flex; align-items: center; gap: 9px; height: 40px; padding: 0 18px; border-radius: 999px; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.1); font-size: 16px; font-weight: 600; color: #E2E8F0; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 12px currentColor; }
+  .frame { position: absolute; left: 50%; top: 468px; width: 1340px; transform: translateX(-50%); border-radius: 18px; overflow: hidden; background: #F7F8FA;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.12), 0 50px 120px -20px rgba(0,0,0,.75), 0 30px 60px -30px rgba(245,158,11,.25); }
+  .bar { height: 46px; display: flex; align-items: center; gap: 8px; padding: 0 18px; background: #EEF0F4; border-bottom: 1px solid #E2E5EA; }
+  .bar i { width: 13px; height: 13px; border-radius: 50%; display: block; }
+  .url { margin: 0 auto; transform: translateX(-30px); width: 460px; height: 28px; border-radius: 8px; background: #fff; border: 1px solid #E2E5EA; font-size: 13.5px; color: #64748B; display: flex; align-items: center; justify-content: center; gap: 7px; }
+  .frame img { display: block; width: 100%; }
+  .fade { position: absolute; left: 0; right: 0; bottom: 0; height: 170px; background: linear-gradient(to bottom, transparent, #070B14 92%); }
+  .glow { position: absolute; left: 50%; top: 428px; width: 1100px; height: 160px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(245,158,11,.28), transparent); filter: blur(30px); }
+</style></head>
+<body>
+  <div class="grid"></div>
+  <header>
+    <div class="brand"><span class="mark"><svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="13" width="4.5" height="8" rx="1.2" fill="#B45309"/><rect x="9.75" y="8" width="4.5" height="13" rx="1.2" fill="#D97706"/><rect x="16.5" y="3" width="4.5" height="18" rx="1.2" fill="#F59E0B"/></svg></span>Portfolio project · Laravel API + Vue SPA</div>
+    <h1>BuildLead <span>CRM</span></h1>
+    <p class="sub">AI lead scoring CRM &amp; ERP for construction</p>
+    <div class="badges">
+      <span class="badge"><span class="dot" style="background:#FF2D20;color:#FF2D20"></span>Laravel</span>
+      <span class="badge"><span class="dot" style="background:#42B883;color:#42B883"></span>Vue</span>
+      <span class="badge"><span class="dot" style="background:#10A37F;color:#10A37F"></span>OpenAI</span>
+      <span class="badge"><span class="dot" style="background:#4479A1;color:#4479A1"></span>MySQL</span>
+      <span class="badge"><span class="dot" style="background:#DC382D;color:#DC382D"></span>Redis</span>
+    </div>
+  </header>
+  <div class="glow"></div>
+  <div class="frame">
+    <div class="bar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i>
+      <div class="url"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>crm.buildlead.test</div></div>
+    <img src="../screenshots/02-dashboard-light.png">
+  </div>
+  <div class="fade"></div>
+</body></html>

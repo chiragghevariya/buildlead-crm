@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---- Design tokens (RGB triplets for Tailwind alpha support) ---------------- */
+@layer base {
+  :root {
+    --canvas: 247 248 250;   /* #F7F8FA */
+    --surface: 255 255 255;
+    --subtle: 243 244 246;
+    --line: 229 231 235;     /* #E5E7EB */
+    --ink: 15 23 42;
+    --muted: 100 116 139;
+    --faint: 116 130 152;    /* ≈3.9:1 on white (was slate-400, 2.6:1) */
+    color-scheme: light;
+  }
+  .dark {
+    --canvas: 7 11 20;
+    --surface: 13 19 33;
+    --subtle: 21 30 49;
+    --line: 32 43 66;
+    --ink: 232 236 243;
+    --muted: 148 160 182;
+    --faint: 122 135 160;    /* ≈4.8:1 on surface */
+    color-scheme: dark;
+  }
+
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+  body { @apply bg-canvas text-base text-ink; font-feature-settings: 'cv11', 'ss01', 'ss03'; }
+  ::selection { background: rgb(245 158 11 / 0.25); }
+  /* Visible keyboard focus everywhere by default; .focus-ring / fields swap it for a softer ring. */
+  :focus-visible { outline: 2px solid rgb(245 158 11 / 0.75); outline-offset: 2px; border-radius: 6px; }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* Thin, theme-aware scrollbars */
+  * { scrollbar-width: thin; scrollbar-color: rgb(var(--line)) transparent; }
+  *::-webkit-scrollbar { width: 10px; height: 10px; }
+  *::-webkit-scrollbar-thumb { background: rgb(var(--line)); border-radius: 999px; border: 3px solid transparent; background-clip: content-box; }
+}
+
+@layer components {
+  .card { @apply rounded-card border border-line bg-surface shadow-card; }
+  .focus-ring:focus-visible { outline: none; }
+  .focus-ring { @apply focus-visible:ring-2 focus-visible:ring-brand/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface; }
+
+  .field-label { @apply mb-1.5 block text-[13px] font-medium text-ink; }
+  .field-input {
+    @apply block w-full rounded-[10px] border border-line bg-surface px-3 py-2 text-[14px] text-ink shadow-sm transition
+           placeholder:text-faint hover:border-faint/60 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/15;
+  }
+  .field-input:focus-visible { outline: none; }
+  .field-input.is-invalid { @apply border-red-400 focus:border-red-500 focus:ring-red-500/15; }
+  .field-error { @apply mt-1 text-xs text-red-600 dark:text-red-400; }
+
+  .kbd {
+    @apply inline-flex h-5 min-w-[20px] items-center justify-center rounded-md border border-line bg-subtle px-1.5
+           font-sans text-[11px] font-medium text-muted;
+  }
+
+  .num { font-variant-numeric: tabular-nums; }
+  .eyebrow { @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-faint; }
+}
+
+/* ---- Range sliders: light track, amber fill up to the thumb (--fill set by v-range) ---------- */
+input[type='range'] {
+  -webkit-appearance: none; appearance: none; height: 6px; border-radius: 999px; cursor: pointer; background: transparent;
+  --range-color: #F59E0B;
+}
+input[type='range'].range-hot { --range-color: #F97316; }
+input[type='range']::-webkit-slider-runnable-track {
+  height: 6px; border-radius: 999px;
+  background: linear-gradient(to right, var(--range-color) var(--fill, 50%), rgb(var(--line)) var(--fill, 50%));
+}
+input[type='range']::-moz-range-track { height: 6px; border-radius: 999px; background: rgb(var(--line)); }
+input[type='range']::-moz-range-progress { height: 6px; border-radius: 999px; background: var(--range-color); }
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px; margin-top: -6px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--range-color); box-shadow: 0 1px 3px rgb(16 24 40 / .25); transition: transform .12s ease;
+}
+input[type='range']::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 2px solid var(--range-color); box-shadow: 0 1px 3px rgb(16 24 40 / .25); }
+input[type='range']:active::-webkit-slider-thumb { transform: scale(1.15); }
+input[type='range']:focus-visible { outline: none; }
+input[type='range']:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgb(245 158 11 / .3); }
+input[type='range']:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 4px rgb(245 158 11 / .3); }
+.dark input[type='range']::-webkit-slider-thumb { background: rgb(var(--surface)); }
+.dark input[type='range']::-moz-range-thumb { background: rgb(var(--surface)); }
+
+/* ---- Pipeline drag: Sortable's fallback clone lives on <body>, so it's styled globally.
+   Fallback mode draws a real lifted card under the pointer (crisper than native drag images, works on touch). */
+.sortable-fallback.pipeline-drag { opacity: 1 !important; rotate: 2deg; box-shadow: 0 24px 48px -12px rgb(16 24 40 / .35) !important; cursor: grabbing; }
+
+/* ---- Transitions ------------------------------------------------------------- */
+.page-enter-active, .page-leave-active { transition: opacity .18s ease, transform .22s cubic-bezier(.2,.8,.2,1); }
+.page-enter-from { opacity: 0; transform: translateY(6px); }
+.page-leave-to { opacity: 0; transform: translateY(-2px); }
+
+.fade-enter-active, .fade-leave-active { transition: opacity .18s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+
+.pop-enter-active { transition: opacity .16s ease, transform .2s cubic-bezier(.2,.8,.2,1); }
+.pop-leave-active { transition: opacity .12s ease, transform .12s ease; }
+.pop-enter-from, .pop-leave-to { opacity: 0; transform: scale(.97) translateY(-4px); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ApexCharts theme alignment */
+.apexcharts-tooltip { @apply !rounded-lg !border-line !bg-surface !text-ink !shadow-pop; }
+.apexcharts-tooltip-title { @apply !border-line !bg-subtle !font-sans !text-xs !font-semibold; }
+.apexcharts-xaxistooltip { display: none; }

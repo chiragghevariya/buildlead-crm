@@ -1,0 +1,118 @@
+# BuildLead CRM: one-command local stack.
+#   docker compose up --build
+#   SPA  → http://localhost:5190   (admin@buildlead.test / password)
+#   API  → http://localhost:8020/api
+# First start installs dependencies, migrates and seeds the demo company (~1–2 min).
+# Reset everything: docker compose down -v
+
+x-backend: &backend
+  build: ./backend
+  image: buildlead-api:local
+  volumes:
+    - ./backend:/var/www/backend
+    - backend_vendor:/var/www/backend/vendor
+  environment: &backend-env
+    APP_ENV: local
+    APP_URL: http://localhost:8020
+    FRONTEND_URL: http://localhost:5190
+    DB_CONNECTION: mysql
+    DB_HOST: mysql
+    DB_PORT: 3306
+    DB_DATABASE: buildlead
+    DB_USERNAME: buildlead
+    DB_PASSWORD: buildlead
+    REDIS_CLIENT: predis
+    REDIS_HOST: redis
+    REDIS_PORT: 6379
+    QUEUE_CONNECTION: redis
+    CACHE_STORE: redis
+    SESSION_DRIVER: array
+    MAIL_MAILER: log
+    LOG_CHANNEL: stderr
+    # Optional: AI scoring and Slack alerts (rules-only scoring when empty)
+    OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    SLACK_HOT_LEAD_WEBHOOK_URL: ${SLACK_HOT_LEAD_WEBHOOK_URL:-}
+  depends_on:
+    mysql: { condition: service_healthy }
+    redis: { condition: service_healthy }
+  restart: unless-stopped
+
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: buildlead
+      MYSQL_USER: buildlead
+      MYSQL_PASSWORD: buildlead
+      MYSQL_ROOT_PASSWORD: root
+    ports: ["3307:3306"] # 3307 on the host to avoid clashing with a local MySQL
+    volumes: [mysql_data:/var/lib/mysql]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-ubuildlead", "-pbuildlead"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 20s
+
+  redis:
+    image: redis:7-alpine
+    volumes: [redis_data:/data]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # Laravel API (php artisan serve). Runs migrations and the demo seed on first start.
+  api:
+    <<: *backend
+    environment:
+      <<: *backend-env
+      RUN_MIGRATIONS: "1"
+      PHP_CLI_SERVER_WORKERS: "4"
+    # --no-reload: otherwise `artisan serve` strips container env vars (DB_HOST=mysql…) whenever a .env exists.
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8020", "--no-reload"]
+    ports: ["8020:8020"]
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1:8020/up') === false ? 1 : 0);"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+      start_period: 30s
+
+  # Queue worker: AI scoring first, then hot-lead notifications, then the rest.
+  queue:
+    <<: *backend
+    command: ["php", "artisan", "queue:work", "redis", "--queue=scoring,notifications,default", "--tries=3", "--sleep=1"]
+    depends_on:
+      api: { condition: service_healthy }
+
+  # Scheduler: invoices:mark-overdue daily at 06:00 Europe/Berlin.
+  scheduler:
+    <<: *backend
+    command: ["php", "artisan", "schedule:work"]
+    depends_on:
+      api: { condition: service_healthy }
+
+  # Vue SPA dev server; /api is proxied to the api container.
+  node:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm ci --no-audit --no-fund && npm run dev -- --host 0.0.0.0"
+    environment:
+      VITE_PROXY_TARGET: http://api:8020
+      VITE_HOST: 0.0.0.0
+      VITE_POLL: "1" # file watching through the Docker bind mount
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    ports: ["5190:5190"]
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  redis_data:
+  backend_vendor:
+  frontend_node_modules:

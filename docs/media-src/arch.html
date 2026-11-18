@@ -1,0 +1,125 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  @font-face { font-family: Inter; font-weight: 400; src: url(../../frontend/node_modules/@fontsource/inter/files/inter-latin-400-normal.woff2); }
+  @font-face { font-family: Inter; font-weight: 500; src: url(../../frontend/node_modules/@fontsource/inter/files/inter-latin-500-normal.woff2); }
+  @font-face { font-family: Inter; font-weight: 600; src: url(../../frontend/node_modules/@fontsource/inter/files/inter-latin-600-normal.woff2); }
+  @font-face { font-family: Inter; font-weight: 700; src: url(../../frontend/node_modules/@fontsource/inter/files/inter-latin-700-normal.woff2); }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1600px; height: 1000px; overflow: hidden; }
+  body { font-family: Inter, system-ui, sans-serif; color: #E8ECF3; position: relative;
+    background: radial-gradient(900px 500px at 85% 0%, rgba(245,158,11,.10), transparent 60%), linear-gradient(160deg, #0B1220, #070B14); }
+  .dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1.2px); background-size: 24px 24px; }
+  h1 { position: absolute; left: 70px; top: 54px; font-size: 34px; font-weight: 700; letter-spacing: -0.03em; color: #fff; }
+  h1 span { color: #F59E0B; }
+  .lede { position: absolute; left: 70px; top: 102px; font-size: 17px; color: #94A3B8; }
+  .node { position: absolute; border-radius: 16px; background: #0F1729; border: 1px solid #22304A; padding: 18px 20px; box-shadow: 0 20px 40px -24px rgba(0,0,0,.8); }
+  .node.accent { border-color: rgba(245,158,11,.55); background: linear-gradient(180deg, rgba(245,158,11,.10), rgba(15,23,41,1) 70%); box-shadow: 0 0 0 4px rgba(245,158,11,.06), 0 24px 50px -24px rgba(245,158,11,.35); }
+  .kicker { font-size: 11.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #64748B; display: flex; align-items: center; gap: 8px; }
+  .title { margin-top: 6px; font-size: 20px; font-weight: 600; color: #fff; letter-spacing: -0.015em; display: flex; align-items: center; gap: 10px; }
+  .desc { margin-top: 6px; font-size: 13.5px; line-height: 1.5; color: #94A3B8; }
+  .ico { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; flex: none; }
+  .ico svg { width: 18px; height: 18px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600; background: rgba(255,255,255,.05); border: 1px solid #2A3954; color: #CBD5E1; }
+  .src { position: absolute; left: 70px; width: 260px; height: 64px; border-radius: 14px; background: #0F1729; border: 1px solid #22304A; display: flex; align-items: center; gap: 12px; padding: 0 16px; font-size: 15.5px; font-weight: 600; }
+  .src small { display: block; font-size: 12px; font-weight: 500; color: #64748B; margin-top: 2px; }
+  .step { position: absolute; width: 26px; height: 26px; border-radius: 50%; background: #F59E0B; color: #0B1220; font-size: 13px; font-weight: 700; display: grid; place-items: center; box-shadow: 0 0 0 5px #0B1220; z-index: 3; }
+  .lbl { position: absolute; font-size: 12px; font-weight: 500; color: #94A3B8; background: #0B1220; padding: 2px 8px; border-radius: 6px; border: 1px solid #1E2A40; z-index: 3; white-space: nowrap; }
+  svg#wires { position: absolute; inset: 0; z-index: 1; }
+  .node, .src { z-index: 2; }
+  .legend { position: absolute; left: 70px; bottom: 44px; display: flex; gap: 28px; font-size: 13px; color: #94A3B8; align-items: center; }
+  .legend i { display: inline-block; width: 30px; height: 0; border-top: 2px solid #F59E0B; vertical-align: middle; margin-right: 8px; }
+  .legend i.d { border-top: 2px dashed #64748B; }
+  .stack { position: absolute; right: 70px; bottom: 40px; display: flex; gap: 8px; }
+</style></head>
+<body>
+<div class="dots"></div>
+<h1>BuildLead CRM <span>·</span> lead flow</h1>
+<p class="lede">From first enquiry to the right sales rep in seconds: every lead is ingested, queued, scored by rules + OpenAI and auto-assigned.</p>
+
+<!-- Row 1 -->
+<div class="src" id="s1" style="top:214px"><span class="ico" style="background:rgba(59,130,246,.15)"><svg viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 13h6M7 16h10"/></svg></span><span>Website form<small>docs/website-form.html</small></span></div>
+<div class="src" id="s2" style="top:298px"><span class="ico" style="background:rgba(168,85,247,.15)"><svg viewBox="0 0 24 24" fill="none" stroke="#C084FC" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><span>Email<small>inbox → ingest webhook</small></span></div>
+<div class="src" id="s3" style="top:382px"><span class="ico" style="background:rgba(16,185,129,.15)"><svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span><span>Call tracking<small>call tracker → webhook</small></span></div>
+
+<div class="node" id="ingest" style="left:410px; top:236px; width:280px; height:186px">
+  <div class="kicker">Laravel 12</div>
+  <div class="title"><span class="ico" style="background:rgba(255,45,32,.14)"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6B5E" stroke-width="2" stroke-linecap="round"><path d="M4 12h12M12 6l6 6-6 6"/></svg></span>Ingest API</div>
+  <div class="desc"><code style="color:#CBD5E1">POST /api/leads/ingest</code><br>Shared token, validation, rate limit, CORS, GDPR consent</div>
+</div>
+<div class="node" id="mysql" style="left:770px; top:236px; width:280px; height:186px">
+  <div class="kicker">Database</div>
+  <div class="title"><span class="ico" style="background:rgba(68,121,161,.22)"><svg viewBox="0 0 24 24" fill="none" stroke="#7FB2DA" stroke-width="2"><ellipse cx="12" cy="5.5" rx="7.5" ry="2.8"/><path d="M4.5 5.5v13c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-13M4.5 12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8"/></svg></span>MySQL</div>
+  <div class="desc">leads · activities · users<br>quotes · projects · invoices</div>
+</div>
+<div class="node" id="redis" style="left:1130px; top:236px; width:400px; height:186px">
+  <div class="kicker">Queue</div>
+  <div class="title"><span class="ico" style="background:rgba(220,56,45,.16)"><svg viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2" stroke-linejoin="round"><path d="M12 3 3 7.5l9 4.5 9-4.5zM3 12l9 4.5 9-4.5M3 16.5 12 21l9-4.5"/></svg></span>Redis queue</div>
+  <div class="desc">Dedicated queues, worked in priority order</div>
+  <div style="margin-top:12px; display:flex; gap:8px"><span class="chip">scoring</span><span class="chip">notifications</span><span class="chip">default</span></div>
+</div>
+
+<!-- Row 2 (right → left) -->
+<div class="node accent" id="score" style="left:1130px; top:570px; width:400px; height:226px">
+  <div class="kicker" style="color:#FBBF24">Job · unique per lead · 3 tries</div>
+  <div class="title"><span class="ico" style="background:rgba(245,158,11,.18)"><svg viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2" stroke-linecap="round"><path d="m12 3 1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></span>ScoreLeadJob</div>
+  <div style="margin-top:14px; display:grid; grid-template-columns:1fr 1fr; gap:10px">
+    <div style="border:1px solid #2A3954; border-radius:12px; padding:10px 12px; background:rgba(255,255,255,.03)"><div style="font-size:13.5px; font-weight:600; color:#fff">Rules · 40 %</div><div style="font-size:12px; color:#94A3B8; margin-top:3px">budget, type, location,<br>urgency, source, data</div></div>
+    <div style="border:1px solid #2A3954; border-radius:12px; padding:10px 12px; background:rgba(255,255,255,.03)"><div style="font-size:13.5px; font-weight:600; color:#fff">OpenAI · 60 %</div><div style="font-size:12px; color:#94A3B8; margin-top:3px">score, reasons,<br>summary, next action</div></div>
+  </div>
+  <div style="margin-top:12px; display:flex; gap:8px; align-items:center; font-size:12.5px; color:#94A3B8">→ <span class="chip" style="color:#FCA5A5;border-color:rgba(239,68,68,.4)">Hot ≥ 75</span><span class="chip" style="color:#FCD34D;border-color:rgba(245,158,11,.4)">Warm ≥ 50</span><span class="chip">Cold</span></div>
+</div>
+<div class="node" id="assign" style="left:770px; top:592px; width:280px; height:186px">
+  <div class="kicker">Service</div>
+  <div class="title"><span class="ico" style="background:rgba(16,185,129,.15)"><svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M17 11l2 2 4-4"/></svg></span>Auto-assign</div>
+  <div class="desc">Best rep by region (postcode), project type, free capacity and win rate</div>
+</div>
+<div class="node" id="notify" style="left:410px; top:592px; width:280px; height:186px">
+  <div class="kicker">Hot leads only</div>
+  <div class="title"><span class="ico" style="background:rgba(239,68,68,.15)"><svg viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg></span>Notifications</div>
+  <div class="desc">Sent to the assigned rep, after commit</div>
+  <div style="margin-top:12px; display:flex; gap:8px"><span class="chip">Mail</span><span class="chip">Slack</span><span class="chip">In-app</span></div>
+</div>
+<div class="node" id="spa" style="left:70px; top:592px; width:260px; height:186px">
+  <div class="kicker">Vue 3 SPA</div>
+  <div class="title"><span class="ico" style="background:rgba(66,184,131,.16)"><svg viewBox="0 0 24 24" fill="#42B883"><path d="M2 3h4l6 10.5L18 3h4L12 21z" opacity=".9"/><path d="M6.5 3h3L12 7.4 14.5 3h3L12 12.6z" fill="#35495E"/></svg></span>Sales team</div>
+  <div class="desc">Dashboard, pipeline, lead detail with AI breakdown, quotes, ⌘K</div>
+</div>
+
+<svg id="wires" width="1600" height="1000" viewBox="0 0 1600 1000"><defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#F59E0B"/></marker>
+  <marker id="arrg" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#64748B"/></marker>
+</defs></svg>
+
+<div class="legend"><span><i></i>Lead flow</span><span><i class="d"></i>Reads / writes</span><span style="display:inline-flex;align-items:center;gap:8px"><span class="step" style="position:static;box-shadow:none;width:20px;height:20px;font-size:11px">1</span>Step order</span></div>
+<div class="stack"><span class="chip">PHP 8.3</span><span class="chip">Laravel 12 · Sanctum</span><span class="chip">Vue 3 · Vite · Tailwind</span><span class="chip">OpenAI gpt-4o-mini</span><span class="chip">MySQL 8 · Redis 7</span></div>
+
+<script>
+const svg = document.getElementById('wires')
+const R = (id) => { const r = document.getElementById(id).getBoundingClientRect(); return { l: r.left, r: r.right, t: r.top, b: r.bottom, cx: r.left + r.width / 2, cy: r.top + r.height / 2 } }
+function path(d, dashed) {
+  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+  p.setAttribute('d', d); p.setAttribute('fill', 'none')
+  p.setAttribute('stroke', dashed ? '#475569' : '#F59E0B'); p.setAttribute('stroke-width', dashed ? 1.8 : 2.4)
+  if (dashed) p.setAttribute('stroke-dasharray', '6 6')
+  p.setAttribute('marker-end', dashed ? 'url(#arrg)' : 'url(#arr)'); svg.appendChild(p)
+}
+function step(n, x, y) { const s = document.createElement('div'); s.className = 'step'; s.textContent = n; s.style.left = x - 13 + 'px'; s.style.top = y - 13 + 'px'; document.body.appendChild(s) }
+function label(t, x, y) { const s = document.createElement('div'); s.className = 'lbl'; s.textContent = t; document.body.appendChild(s); s.style.left = x - s.offsetWidth / 2 + 'px'; s.style.top = y - s.offsetHeight / 2 + 'px' }
+
+const ing = R('ingest'), my = R('mysql'), re = R('redis'), sc = R('score'), as = R('assign'), no = R('notify'), spa = R('spa')
+// sources → ingest (curves into one entry point)
+for (const id of ['s1', 's2', 's3']) { const s = R(id); const tx = ing.l - 4, ty = ing.cy; path(`M${s.r} ${s.cy} C ${s.r + 45} ${s.cy}, ${tx - 45} ${ty}, ${tx} ${ty}`) }
+step(1, (R('s2').r + ing.l) / 2, ing.cy - 0)
+path(`M${ing.r} ${ing.cy} L ${my.l - 4} ${my.cy}`); step(2, (ing.r + my.l) / 2, ing.cy); label('store lead', (ing.r + my.l) / 2, ing.cy + 30)
+path(`M${my.r} ${my.cy} L ${re.l - 4} ${re.cy}`); step(3, (my.r + re.l) / 2, my.cy); label('dispatch', (my.r + re.l) / 2, my.cy + 30)
+path(`M${re.cx} ${re.b} L ${sc.cx} ${sc.t - 4}`); step(4, re.cx, (re.b + sc.t) / 2); label('queue: scoring', re.cx + 92, (re.b + sc.t) / 2)
+path(`M${sc.l} ${as.cy} L ${as.r + 4} ${as.cy}`); step(5, (sc.l + as.r) / 2, as.cy)
+path(`M${as.l} ${as.cy} L ${no.r + 4} ${no.cy}`); step(6, (as.l + no.r) / 2, no.cy); label('if Hot', (as.l + no.r) / 2, no.cy + 30)
+path(`M${no.l} ${no.cy} L ${spa.r + 4} ${spa.cy}`); step(7, (no.l + spa.r) / 2, spa.cy)
+// persisted results back to MySQL
+path(`M${as.cx} ${as.t} L ${my.cx} ${my.b + 4}`, true); label('score · reasons · owner saved', my.cx, (my.b + as.t) / 2)
+// SPA reads via the API
+path(`M${spa.cx} ${spa.t} C ${spa.cx} ${spa.t - 70}, ${ing.cx - 60} ${ing.b + 70}, ${ing.cx - 40} ${ing.b + 4}`, true); label('REST API · Sanctum', (spa.cx + ing.cx) / 2 - 30, (spa.t + ing.b) / 2 + 6)
+</script>
+</body></html>

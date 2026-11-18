@@ -1,0 +1,17 @@
+{
+  "name": "buildlead-media",
+  "private": true,
+  "type": "module",
+  "description": "Regenerates the portfolio media in docs/ from the SPA running in demo mode.",
+  "scripts": {
+    "setup": "npx playwright install chromium",
+    "shots": "node shots.mjs ../screenshots",
+    "cover": "node render.mjs cover.html ../cover.png 1600 1200 1",
+    "diagram": "node render.mjs arch.html ../diagrams/architecture.png 1600 1000 2",
+    "video": "node video.mjs .frames && python3 assemble.py .frames ..",
+    "all": "npm run shots && npm run cover && npm run diagram && npm run video"
+  },
+  "devDependencies": {
+    "playwright": "1.65.0"
+  }
+}

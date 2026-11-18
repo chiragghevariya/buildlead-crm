@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projekt anfragen · BuildLead Bau GmbH</title>
+  <!--
+    Example company website form → BuildLead CRM webhook.
+
+    1. Start the API:   cd backend && php artisan serve --port=8020
+    2. Paste LEAD_INGEST_TOKEN from backend/.env into INGEST_TOKEN below
+       (or open this file with ?token=YOUR_TOKEN).
+    3. Open this file in a browser and submit. The lead appears in the CRM and is
+       scored once a queue worker runs: php artisan queue:work --queue=scoring,notifications,default
+
+    Security note: a token in public HTML is visible to anyone. It can only *create*
+    leads, and the endpoint is rate limited per IP, honeypot-protected and
+    origin-restricted via INGEST_ALLOWED_ORIGINS. In production, prefer posting
+    through the website's own backend so the token stays server-side.
+  -->
+  <style>
+    :root {
+      --amber: #F59E0B; --amber-hover: #D97706; --navy: #0B1220; --bg: #F7F8FA;
+      --card: #FFFFFF; --border: #E5E7EB; --text: #111827; --muted: #6B7280;
+      --danger: #DC2626; --success: #059669; --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    header { background: var(--navy); color: #fff; }
+    .bar { max-width: 1040px; margin: 0 auto; padding: 18px 20px; display: flex; align-items: center; gap: 12px; }
+    .logo { width: 30px; height: 30px; }
+    .brand { font-weight: 700; letter-spacing: -.01em; font-size: 17px; }
+    .brand small { display: block; font-weight: 500; color: #9CA3AF; font-size: 12px; letter-spacing: 0; }
+    .hero { max-width: 1040px; margin: 0 auto; padding: 40px 20px 110px; }
+    .hero h1 { margin: 0 0 8px; font-size: clamp(26px, 4vw, 38px); letter-spacing: -.02em; }
+    .hero p { margin: 0; color: #CBD5E1; max-width: 560px; }
+    main { max-width: 1040px; margin: -80px auto 60px; padding: 0 20px; display: grid; grid-template-columns: 1fr 300px; gap: 24px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 10px 30px -12px rgba(15, 23, 42, .18); }
+    form.card { padding: 28px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .full { grid-column: 1 / -1; }
+    label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    label .opt { color: var(--muted); font-weight: 400; }
+    input, select, textarea {
+      width: 100%; font: inherit; color: inherit; background: #fff;
+      border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    textarea { min-height: 110px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(245, 158, 11, .2); }
+    .invalid { border-color: var(--danger) !important; }
+    .err { color: var(--danger); font-size: 12px; margin-top: 4px; min-height: 0; }
+    .consent { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--muted); }
+    .consent input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--amber); flex: none; }
+    .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+    button {
+      font: inherit; font-weight: 600; border: 0; border-radius: 10px; padding: 12px 22px; cursor: pointer;
+      background: var(--amber); color: var(--navy); transition: background .15s, transform .05s;
+    }
+    button:hover { background: var(--amber-hover); }
+    button:active { transform: translateY(1px); }
+    button[disabled] { opacity: .6; cursor: wait; }
+    .actions { display: flex; align-items: center; gap: 14px; margin-top: 8px; flex-wrap: wrap; }
+    .note { color: var(--muted); font-size: 12px; }
+    .alert { border-radius: 10px; padding: 12px 14px; margin-bottom: 18px; font-size: 14px; display: none; }
+    .alert.error { display: block; background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+    .success { text-align: center; padding: 48px 28px; display: none; }
+    .success svg { width: 56px; height: 56px; }
+    .success h2 { margin: 14px 0 6px; }
+    .ref { display: inline-block; margin-top: 12px; padding: 6px 12px; border-radius: 999px; background: #FEF3C7; color: #92400E; font-weight: 600; font-variant-numeric: tabular-nums; }
+    aside .card { padding: 22px; }
+    aside h3 { margin: 0 0 12px; font-size: 15px; }
+    aside ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; font-size: 14px; color: var(--muted); }
+    aside li strong { color: var(--text); display: block; }
+    .dev { margin-top: 16px; font-size: 12px; color: var(--muted); }
+    .dev code { background: #F3F4F6; padding: 1px 5px; border-radius: 5px; }
+    @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+    @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } form.card { padding: 20px; } main { padding: 0 16px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="bar">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="#F59E0B"/>
+        <path d="M8 23V9h7.5a4 4 0 0 1 0 8H8m7.5 0H17a3.5 3.5 0 0 1 0 7H8" fill="none" stroke="#0B1220" stroke-width="2.6" stroke-linejoin="round"/>
+      </svg>
+      <div class="brand">BuildLead Bau GmbH<small>Bauen in Berlin &amp; Brandenburg seit 1998</small></div>
+    </div>
+    <div class="hero">
+      <h1>Projekt anfragen</h1>
+      <p>Neubau, Sanierung, Anbau oder Gewerbeausbau: Beschreiben Sie Ihr Vorhaben, und wir melden uns innerhalb eines Werktags mit einer ersten Einschätzung.</p>
+    </div>
+  </header>
+
+  <main>
+    <div>
+      <form class="card" id="lead-form" novalidate>
+        <div class="alert" id="alert" role="alert"></div>
+
+        <div class="grid">
+          <div><label for="vorname">Vorname</label><input id="vorname" name="vorname" autocomplete="given-name" required><div class="err" data-for="contact_name"></div></div>
+          <div><label for="nachname">Nachname</label><input id="nachname" name="nachname" autocomplete="family-name" required></div>
+          <div class="full"><label for="firma">Firma <span class="opt">(optional)</span></label><input id="firma" name="firma" autocomplete="organization"></div>
+          <div><label for="email">E-Mail</label><input id="email" name="email" type="email" autocomplete="email"><div class="err" data-for="email"></div></div>
+          <div><label for="telefon">Telefon</label><input id="telefon" name="telefon" type="tel" autocomplete="tel" placeholder="030 …"><div class="err" data-for="phone"></div></div>
+
+          <div>
+            <label for="projektart">Projektart</label>
+            <select id="projektart" name="projektart">
+              <option value="">Bitte wählen …</option>
+              <option>Neubau</option>
+              <option>Sanierung / Renovierung</option>
+              <option>Anbau / Dachausbau</option>
+              <option>Gewerbe- / Büroausbau</option>
+              <option>Dach</option>
+              <option>Innenausbau</option>
+              <option>Reparatur</option>
+            </select>
+          </div>
+          <div>
+            <label for="zeitraum">Gewünschter Start</label>
+            <select id="zeitraum" name="zeitraum">
+              <option value="">Bitte wählen …</option>
+              <option>So schnell wie möglich</option>
+              <option>In 1–3 Monaten</option>
+              <option>In 3–6 Monaten</option>
+              <option>Dieses Jahr</option>
+              <option>Ich informiere mich nur</option>
+            </select>
+          </div>
+          <div><label for="budget">Budget <span class="opt">(optional)</span></label><input id="budget" name="budget" placeholder="z. B. 80.000–120.000 €"></div>
+          <div><label for="flaeche">Fläche <span class="opt">(m², optional)</span></label><input id="flaeche" name="flaeche" inputmode="numeric" placeholder="z. B. 120"></div>
+
+          <div class="full"><label for="strasse">Straße &amp; Hausnummer <span class="opt">(Baustelle)</span></label><input id="strasse" name="strasse" autocomplete="street-address"></div>
+          <div><label for="plz">PLZ</label><input id="plz" name="plz" inputmode="numeric" maxlength="5" autocomplete="postal-code"><div class="err" data-for="postcode"></div></div>
+          <div><label for="ort">Ort</label><input id="ort" name="ort" autocomplete="address-level2" value="Berlin"></div>
+
+          <div class="full"><label for="nachricht">Ihr Vorhaben</label><textarea id="nachricht" name="nachricht" placeholder="Was soll gebaut oder saniert werden? Gibt es schon Pläne oder eine Baugenehmigung?"></textarea></div>
+
+          <!-- Honeypot: hidden from humans, bots fill it -->
+          <div class="hp" aria-hidden="true"><label for="_hp">Website</label><input id="_hp" name="_hp" tabindex="-1" autocomplete="off"></div>
+
+          <div class="full">
+            <label class="consent"><input type="checkbox" name="datenschutz" value="on">
+              <span>Ich willige ein, dass BuildLead Bau GmbH meine Angaben zur Bearbeitung meiner Anfrage verarbeitet. Die Einwilligung kann jederzeit widerrufen werden (Art. 6 Abs. 1 lit. a DSGVO).</span>
+            </label>
+            <div class="err" data-for="consent"></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" id="submit">Anfrage senden</button>
+          <span class="note">Antwort in der Regel innerhalb von 24 Stunden.</span>
+        </div>
+      </form>
+
+      <div class="card success" id="success" aria-live="polite">
+        <svg viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="28" fill="#D1FAE5"/><path d="M17 29l7 7 15-16" fill="none" stroke="#059669" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h2>Vielen Dank für Ihre Anfrage!</h2>
+        <p class="note" id="success-msg">Unser Team meldet sich innerhalb eines Werktags bei Ihnen.</p>
+        <div class="ref" id="ref"></div>
+      </div>
+    </div>
+
+    <aside>
+      <div class="card">
+        <h3>Warum BuildLead?</h3>
+        <ul>
+          <li><strong>Festpreisangebote</strong>Transparente Kalkulation nach Vor-Ort-Termin.</li>
+          <li><strong>Ein Ansprechpartner</strong>Von der Planung bis zur Abnahme.</li>
+          <li><strong>Berlin &amp; Brandenburg</strong>Kurze Wege, eigene Kolonnen.</li>
+        </ul>
+        <p class="dev">Demo: sendet an <code id="api-label"></code> per <code>X-Ingest-Token</code>.</p>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // ---- Configuration ----------------------------------------------------
+    const API_URL = 'http://localhost:8020/api/ingest/website';
+    const INGEST_TOKEN = new URLSearchParams(location.search).get('token') || 'PASTE_LEAD_INGEST_TOKEN_HERE';
+    // ----------------------------------------------------------------------
+
+    const form = document.getElementById('lead-form');
+    const alertBox = document.getElementById('alert');
+    const submit = document.getElementById('submit');
+    document.getElementById('api-label').textContent = API_URL.replace(/^https?:\/\//, '');
+
+    // API field → input(s) to highlight
+    const FIELD_INPUTS = { contact_name: ['vorname', 'nachname'], email: ['email'], phone: ['telefon'], postcode: ['plz'], consent: [] };
+
+    function clearErrors() {
+      alertBox.className = 'alert';
+      alertBox.textContent = '';
+      form.querySelectorAll('.err').forEach(el => (el.textContent = ''));
+      form.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+    }
+
+    function showErrors(errors) {
+      Object.entries(errors).forEach(([field, messages]) => {
+        const slot = form.querySelector(`.err[data-for="${field}"]`);
+        if (slot) slot.textContent = messages[0];
+        (FIELD_INPUTS[field] || []).forEach(id => document.getElementById(id)?.classList.add('invalid'));
+      });
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearErrors();
+
+      if (INGEST_TOKEN.startsWith('PASTE_')) {
+        alertBox.className = 'alert error';
+        alertBox.textContent = 'Demo-Konfiguration: Bitte INGEST_TOKEN in dieser Datei setzen oder ?token=… an die URL anhängen.';
+        return;
+      }
+
+      submit.disabled = true;
+      submit.textContent = 'Wird gesendet …';
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'X-Ingest-Token': INGEST_TOKEN },
+          body: new URLSearchParams(new FormData(form)), // form-encoded, like a classic website form
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+          form.style.display = 'none';
+          document.getElementById('success').style.display = 'block';
+          document.getElementById('ref').textContent = data.reference ? `Ihre Vorgangsnummer: ${data.reference}` : '';
+          return;
+        }
+
+        alertBox.className = 'alert error';
+        if (response.status === 422) {
+          alertBox.textContent = 'Bitte prüfen Sie die markierten Felder.';
+          showErrors(data.errors || {});
+        } else if (response.status === 429) {
+          alertBox.textContent = 'Zu viele Anfragen. Bitte versuchen Sie es in einer Minute erneut.';
+        } else {
+          alertBox.textContent = data.message || 'Die Anfrage konnte nicht gesendet werden. Bitte rufen Sie uns an: 030 5550 1000.';
+        }
+      } catch (e) {
+        alertBox.className = 'alert error';
+        alertBox.textContent = 'Keine Verbindung zum Server. Läuft die API auf ' + API_URL.split('/api')[0] + '?';
+      } finally {
+        submit.disabled = false;
+        submit.textContent = 'Anfrage senden';
+      }
+    });
+  </script>
+</body>
+</html>
